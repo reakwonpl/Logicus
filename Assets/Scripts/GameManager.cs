@@ -1,16 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour 
+{
+    public static GameManager Instance;
 
-	// Use this for initialization
-	void Start () {
-		
+	private GameObject[] tiles;
+	private void Start() 
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+		tiles = GameObject.FindGameObjectsWithTag("Tile");		
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
+	public void CheckIfAllClicked()
+	{
+		bool areAllClicked = tiles.All(x => x.GetComponent<TileLogic>().IsChecked);
+        if (areAllClicked)
+        {
+            Debug.Log("Clicked all objects");
+        } 
 	}
 }

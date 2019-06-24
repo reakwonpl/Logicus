@@ -14,7 +14,7 @@ public class HeadController : MonoBehaviour
 
     public BoxWithHeads box;
  
-    public Sprite[] sprites;
+    
     
 
 	public List<TileLogic> pathTiles;
@@ -28,7 +28,7 @@ public class HeadController : MonoBehaviour
         pathTiles.Add(hit.collider.gameObject.GetComponent<TileLogic>());
         coordinates = pathTiles[0];
         coordinates.IsChecked = true;      
-        coordinates.GetComponent<SpriteRenderer>().sprite = sprites[0];    
+        coordinates.GetComponent<SpriteRenderer>().sprite = box.sprites[0];    
     }
 
     public void Move(TileLogic tile) 
@@ -42,13 +42,13 @@ public class HeadController : MonoBehaviour
 
         //head
       
-        coordinates.GetComponent<SpriteRenderer>().sprite = sprites[0];
+        coordinates.GetComponent<SpriteRenderer>().sprite = box.sprites[0];
         coordinates.gameObject.transform.rotation = Quaternion.Euler(RotationFromROTATION(rot));
 
         //rest
         if (pathTiles.Count >= 2)
         {          
-            pathTiles[pathTiles.Count -2].GetComponent<SpriteRenderer>().sprite = sprites[mat];
+            pathTiles[pathTiles.Count -2].GetComponent<SpriteRenderer>().sprite = box.sprites[mat];
             if (mat == 2)
             {
                 rot = CountRotationSecond();
@@ -58,24 +58,57 @@ public class HeadController : MonoBehaviour
         
 
         GameManager.Instance.CheckIfAllClicked();
-        pathTiles[0].GetComponent<SpriteRenderer>().sprite = sprites[0];
+        pathTiles[0].GetComponent<SpriteRenderer>().sprite = box.sprites[0];
     }
 
     public void GoBack() 
     {
         pathTiles[pathTiles.Count - 1].IsChecked = false;
       
-        pathTiles[pathTiles.Count-1].GetComponent<SpriteRenderer>().sprite = sprites[3];
+        pathTiles[pathTiles.Count-1].GetComponent<SpriteRenderer>().sprite = box.sprites[3];
         pathTiles.RemoveAt(pathTiles.Count-1);
         coordinates = pathTiles[pathTiles.Count - 1];
         gameObject.transform.position = pathTiles[pathTiles.Count - 1].transform.position;
         ROTATION rot = CountRotationHead();
        
-        coordinates.GetComponent<SpriteRenderer>().sprite = sprites[1];
+        coordinates.GetComponent<SpriteRenderer>().sprite = box.sprites[1];
         coordinates.gameObject.transform.rotation = Quaternion.Euler(RotationFromROTATION(rot));
-        pathTiles[0].GetComponent<SpriteRenderer>().sprite = sprites[0];
-        coordinates.GetComponent<SpriteRenderer>().sprite = sprites[0];
+        pathTiles[0].GetComponent<SpriteRenderer>().sprite = box.sprites[0];
+        coordinates.GetComponent<SpriteRenderer>().sprite = box.sprites[0];      
       
+
+
+    }
+
+    public void MergeHeads(TileLogic tile)
+    {
+        pathTiles.Add(tile);
+        tile.IsChecked = true;
+        coordinates = tile;
+
+        ROTATION rot = CountRotationHead();
+        int mat = ChooseMaterial();
+
+        //head
+        coordinates.gameObject.transform.rotation = Quaternion.Euler(RotationFromROTATION(rot));
+        //rest
+        if (pathTiles.Count >= 2)
+        {          
+            pathTiles[pathTiles.Count -2].GetComponent<SpriteRenderer>().sprite = box.sprites[mat];
+            if (mat == 2)
+            {
+                rot = CountRotationSecond();
+            }
+            pathTiles[pathTiles.Count - 2].gameObject.transform.rotation = Quaternion.Euler(RotationFromROTATION(rot));
+        }
+        
+
+        GameManager.Instance.CheckIfAllClicked();
+        pathTiles[0].GetComponent<SpriteRenderer>().sprite = box.sprites[0];
+
+        transform.position = pathTiles[0].gameObject.transform.position;
+        coordinates = pathTiles[0];
+        pathTiles.RemoveAt(pathTiles.Count -1);
     }
 
     private ROTATION CountRotationSecond() 
@@ -206,6 +239,14 @@ public class HeadController : MonoBehaviour
                 return new Vector3(0, 0, 270);
             default:
                 return new Vector3(0, 0, 0);
+        }
+    }
+
+    public void ErasePath()
+    {
+        while(pathTiles.Count > 1)
+        {
+            GoBack();
         }
     }
 }

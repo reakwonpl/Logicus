@@ -10,4 +10,15 @@ public class TileLogic : MonoBehaviour
     public int X;
     [SerializeField]
     public int Y;
+
+    public SpriteRenderer srenderer;
+
+	public void ColorTiler(Color32 color)
+	{
+		if(srenderer == null)
+		{
+			srenderer = GetComponent<SpriteRenderer>();
+		}
+		srenderer.color = color;
+	}
 }

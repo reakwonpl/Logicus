@@ -5,7 +5,7 @@ using UnityEngine;
 public class Tail : MonoBehaviour
  {
 	 public HeadController head;
-
-	 
+	
+	
 
 }

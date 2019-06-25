@@ -11,6 +11,8 @@ public bool isFinished;
     public HeadController head2;
 
     public Sprite[] sprites;
+
+    public Color32 color;
     
 public void ErasePathFromAnotherHead(HeadController head)
 {

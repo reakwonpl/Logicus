@@ -29,6 +29,7 @@ public class HeadController : MonoBehaviour
         coordinates = pathTiles[0];
         coordinates.IsChecked = true;      
         coordinates.GetComponent<SpriteRenderer>().sprite = box.sprites[0];    
+        coordinates.ColorTiler(box.color);
     }
 
     public void Move(TileLogic tile) 
@@ -59,6 +60,7 @@ public class HeadController : MonoBehaviour
 
         GameManager.Instance.CheckIfAllClicked();
         pathTiles[0].GetComponent<SpriteRenderer>().sprite = box.sprites[0];
+        tile.ColorTiler(box.color);
     }
 
     public void GoBack() 
